@@ -52,13 +52,37 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
+
   Duration duration = const Duration(milliseconds: 2000);
+
+  Color backgroundColor = Colors.orange;
+
+  Icon icon = const Icon(Icons.repeat_outlined);
+
   Future<void> _pressHandler() async {
     _controller.forward();
+    setState(() {
+      backgroundColor = Colors.orange;
+      icon = const Icon(Icons.repeat_outlined);
+    });
     // after 1 second to reset animation.
     await Future.delayed(duration, () {
       _controller.reset();
+      setState(() {
+        backgroundColor = Colors.green;
+        icon = const Icon(Icons.check);
+      });
     });
+    // set the origin icon and background color if need
+    if (backgroundColor != Colors.orange ||
+        icon != const Icon(Icons.repeat_outlined)) {
+      await Future.delayed(duration, () {
+        setState(() {
+          backgroundColor = Colors.orange;
+          icon = const Icon(Icons.repeat_outlined);
+        });
+      });
+    }
   }
 
   @override
@@ -77,8 +101,8 @@ class _MyHomePageState extends State<MyHomePage>
       style: ElevatedButton.styleFrom(
           shape: const CircleBorder(),
           padding: const EdgeInsets.all(20.0),
-          primary: Colors.orange),
-      child: const Icon(Icons.repeat_outlined),
+          primary: backgroundColor),
+      child: icon,
     );
 
     var rotationTransition = RotationTransition(
